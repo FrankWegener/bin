@@ -6,8 +6,8 @@ import shutil
 import subprocess
 import sys
 
-PATH_OFFEN = "/mnt/_q/__offen"
-PATH_RAW   = "/mnt/_q/media/__offen"
+PATH_OFFEN = "/mnt/_k/__offen"
+PATH_RAW   = "/mnt/_k/media/__offen"
 
 
 def error(msg):
