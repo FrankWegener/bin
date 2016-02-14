@@ -1,5 +1,8 @@
 #!/usr/bin/python
 
+# this script require:
+#   apt-get install exiv2
+
 
 import os
 import shutil
@@ -15,23 +18,6 @@ def error(msg):
     raise NameError(msg)
 
 
-def get_timestamp(raw_file):
-    output = subprocess.check_output(['exiv2', raw_file])
-
-    for line in output.split('\n'):
-        if "Image timestamp" in line:
-            # Image timestamp : 2014:10:04 17:17:58
-            year   = line[18:22]
-            month  = line[23:25]
-            day    = line[26:28]
-            hour   = line[29:31]
-            minute = line[32:34]
-            second = line[35:37]
-            return "%s-%s-%s__%s:%s:%s" % (year, month, day, hour, minute, second)
- 
-    error("No timestamp information in file '%s' " % (raw_file))
-
-
 def is_rawfile(f):
     return (len(f) > 4 and f[-4:].lower() == ".orf")
 
@@ -40,11 +26,12 @@ def rawfile_date(raw_file):
     output = subprocess.check_output(['exiv2', raw_file])
 
     for line in output.split('\n'):
-        if "Image timestamp" in line:
+        if "Zeitstempel des Bildes" in line:
             # Image timestamp : 2014:10:04 17:17:58
-            year   = line[18:22]
-            month  = line[23:25]
-            day    = line[26:28]
+            # Zeitstempel des Bildes: 2014:10:04 17:17:58
+            year   = line[24:28]
+            month  = line[29:31]
+            day    = line[32:34]
             return "%s-%s-%s" % (year, month, day)
  
     error("No timestamp information in file '%s' " % (raw_file))
@@ -87,7 +74,6 @@ def main():
         if not is_rawfile(f):
            continue
 
-        get_timestamp(f)
         new_date = rawfile_date(f)
  
         if (new_date != date):
