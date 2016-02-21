@@ -10,7 +10,8 @@ import subprocess
 import sys
 
 PATH_OFFEN = "/mnt/_k/__offen"
-PATH_RAW   = "/mnt/_k/media/__offen"
+PATH_JPG   = "/mnt/_k/owncloud/_fwe-offen-jpg"
+PATH_JPG   = "/mnt/_k/owncloud/_fwe-offen-raw"
 
 
 def error(msg):
@@ -39,26 +40,22 @@ def rawfile_date(raw_file):
 
 def rename(rawfile, date, nr):
     path_raw    = PATH_RAW + '/' + date
+    path_jpg    = PATH_JPG + '/' + date
     new_rawfile = "%s/%s-%04d.orf" % (path_raw, date, nr)
-    new_jpgfile = "%s  JPG/%s-%04d.jpg" % (path_raw, date, nr)
-
+    new_jpgfile = "%s/%s-%04d.jpg" % (path_jpg, date, nr)
 
     if not os.path.exists(path_raw):
         os.mkdir(path_raw, 0750)
+
+    if not os.path.exists(path_jpg):
+        os.mkdir(path_jpg, 0750)
 
     shutil.move(rawfile, new_rawfile)
 
     jpgfile = rawfile[:-4] + '.JPG'
 
-    if not os.path.exists(jpgfile):
-        return
-
-    path_raw += '  JPG'
-
-    if not os.path.exists(path_raw):
-        os.mkdir(path_raw, 0750)
-
-    shutil.move(jpgfile, new_jpgfile)
+    if os.path.exists(jpgfile):
+        shutil.move(jpgfile, new_jpgfile)
 
 
 def main():
