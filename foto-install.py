@@ -10,8 +10,8 @@ import subprocess
 import sys
 
 PATH_OFFEN = "/mnt/_k/__offen"
-PATH_JPG   = "/mnt/_k/owncloud/_fwe-offen-jpg"
-PATH_JPG   = "/mnt/_k/owncloud/_fwe-offen-raw"
+PATH_JPG   = "/mnt/_k/owncloud/fwe/_fwe-photo-offen-jpg"
+PATH_RAW   = "/mnt/_k/owncloud/fwe/_fwe-photo-offen-raw"
 
 
 def error(msg):
