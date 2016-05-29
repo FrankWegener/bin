@@ -19,26 +19,26 @@ def error(msg):
     raise NameError(msg)
 
 
-def is_rawfile(f):
-    return (len(f) > 4 and f[-4:].lower() == ".orf")
+def is_jpgfile(f):
+    return (len(f) > 4 and f[-4:].lower() == ".jpg")
 
 
-def rawfile_date(raw_file):
-    output = subprocess.check_output(['exiv2', raw_file])
+def jpgfile_date(jpg_file):
+    output = subprocess.check_output(['exiv2', '-q', jpg_file])
 
     for line in output.split('\n'):
-        if "Zeitstempel des Bildes" in line:
+        if "Image timestamp" in line:
             # Image timestamp : 2014:10:04 17:17:58
             # Zeitstempel des Bildes: 2014:10:04 17:17:58
-            year   = line[24:28]
-            month  = line[29:31]
-            day    = line[32:34]
+            year   = line[18:22]
+            month  = line[23:25]
+            day    = line[26:28]
             return "%s-%s-%s" % (year, month, day)
  
     error("No timestamp information in file '%s' " % (raw_file))
 
 
-def rename(rawfile, date, nr):
+def rename(jpgfile, date, nr):
     path_raw    = PATH_RAW + '/' + date
     path_jpg    = PATH_JPG + '/' + date
     new_rawfile = "%s/%s-%04d.orf" % (path_raw, date, nr)
@@ -50,12 +50,12 @@ def rename(rawfile, date, nr):
     if not os.path.exists(path_jpg):
         os.mkdir(path_jpg, 0750)
 
-    shutil.move(rawfile, new_rawfile)
+    shutil.move(jpgfile, new_jpgfile)
 
-    jpgfile = rawfile[:-4] + '.JPG'
+    rawfile = jpgfile[:-4] + '.ORF'
 
-    if os.path.exists(jpgfile):
-        shutil.move(jpgfile, new_jpgfile)
+    if os.path.exists(rawfile):
+        shutil.move(rawfile, new_rawfile)
 
 
 def main():
@@ -68,10 +68,10 @@ def main():
         if not os.path.isfile(f):
             continue
 
-        if not is_rawfile(f):
+        if not is_jpgfile(f):
            continue
 
-        new_date = rawfile_date(f)
+        new_date = jpgfile_date(f)
  
         if (new_date != date):
             date = new_date
